@@ -37,7 +37,6 @@
   {{ return(sql_convert_columns_in_relation(table)) }}
 {% endmacro %}
 
-
 {% macro athena__list_relations_without_caching(information_schema, schema) %}
   {% call statement('list_relations_without_caching', fetch_result=True) -%}
     select

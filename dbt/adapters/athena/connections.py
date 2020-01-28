@@ -1,6 +1,6 @@
 from collections import Iterable
 from contextlib import contextmanager
-from datetime import datetime
+import datetime
 from getpass import getuser
 import re
 import decimal
@@ -92,7 +92,10 @@ class CursorWrapper(object):
             return "'{}'".format(value.replace("'", "''"))
         elif isinstance(value, (int,float,decimal.Decimal)):
             return value
-        elif isinstance(value, datetime):
+        elif isinstance(value, datetime.date):
+            date_formatted = value.strftime('%Y-%m-%d')
+            return "DATE '{}'".format(date_formatted)
+        elif isinstance(value, datetime.datetime):
             time_formatted = value.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
             return "TIMESTAMP '{}'".format(time_formatted)
         else:
@@ -167,7 +170,7 @@ class AthenaConnectionManager(SQLConnectionManager):
         conn = connect(
             s3_staging_dir=credentials.s3_staging_dir,
             region_name=credentials.region_name,
-            schema_name=credentials.database,
+            schema_name=credentials.schema,
             cursor_class=AsyncCursor
         )
         connection.state = 'open'
