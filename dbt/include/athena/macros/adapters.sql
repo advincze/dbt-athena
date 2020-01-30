@@ -24,11 +24,12 @@
 
       from
       {{ relation.information_schema('columns') }}
+      where table_name='{{ relation.identifier }}'
+      {% if relation.schema %}
+      and table_schema='{{ relation.schema }}'
+      {% endif %}
 
-      where {{ presto_ilike('table_name', relation.identifier) }}
-        {% if relation.schema %}
-        and {{ presto_ilike('table_schema', relation.schema) }}
-        {% endif %}
+
       order by ordinal_position
 
   {% endcall %}
